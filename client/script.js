@@ -1,60 +1,77 @@
-const API_URL = "http://localhost:3000/items";
+const API_URL = "http://127.0.0.1:3000/items";
 
 const form = document.getElementById("item-form");
 const nameInput = document.getElementById("name");
 const categoryInput = document.getElementById("category");
 const colorInput = document.getElementById("color");
 const list = document.getElementById("item-list");
+const submitBtn = form.querySelector("button");
 
 let editId = null;
 
-// Hämta och rendera alla items
+// Hämta och visa items
 async function fetchItems() {
   const response = await fetch(API_URL);
   const items = await response.json();
 
   list.innerHTML = "";
 
-  items.forEach((item) => {
-    const card = document.createElement("div");
-    card.className = "item-card";
-    card.style.borderLeft = `8px solid ${item.color}`;
+  // 🟢 Tomt-läge
+  if (items.length === 0) {
+    list.innerHTML = `<p style="color:#666;font-style:italic;">
+      Inga items ännu – lägg till ett ovan 👆
+    </p>`;
+    return;
+  }
 
-    card.innerHTML = `
-      <h3>${item.name}</h3>
-      <p>Kategori: ${item.category}</p>
-      <button data-id="${item.id}" class="edit-btn">Ändra</button>
-      <button data-id="${item.id}" class="delete-btn">Ta bort</button>
+  items.forEach(item => {
+    const div = document.createElement("div");
+    div.classList.add("item-card");
+
+    div.innerHTML = `
+      <div class="color-bar" style="background:${item.color}"></div>
+
+      <div class="item-content">
+        <h3>${item.name}</h3>
+        <p class="category">Kategori: <strong>${item.category}</strong></p>
+
+        <div class="buttons">
+          <button data-id="${item.id}" class="edit edit-btn">Ändra</button>
+          <button data-id="${item.id}" class="delete delete-btn">Ta bort</button>
+        </div>
+      </div>
     `;
 
-    list.appendChild(card);
+    list.appendChild(div);
   });
 }
 
-// Skapa eller uppdatera item
+// Skapa / uppdatera item
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const itemData = {
+  const data = {
     name: nameInput.value,
     category: categoryInput.value,
-    color: colorInput.value,
+    color: colorInput.value
   };
 
   if (editId) {
-    // UPDATE
-    await fetch(API_URL, {
+    // ✏️ UPDATE
+    await fetch(`${API_URL}/${editId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...itemData, id: editId }),
+      body: JSON.stringify(data)
     });
+
     editId = null;
+    submitBtn.textContent = "Spara";
   } else {
-    // CREATE
+    // ➕ CREATE
     await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(itemData),
+      body: JSON.stringify(data)
     });
   }
 
@@ -66,24 +83,29 @@ form.addEventListener("submit", async (e) => {
 list.addEventListener("click", async (e) => {
   const id = e.target.dataset.id;
 
-  if (e.target.classList.contains("delete-btn")) {
-    // DELETE
+  // 🗑️ DELETE med bekräftelse
+  if (e.target.classList.contains("delete")) {
+    const confirmed = confirm("Är du säker på att du vill ta bort detta item?");
+    if (!confirmed) return;
+
     await fetch(`${API_URL}/${id}`, { method: "DELETE" });
     fetchItems();
   }
 
-  if (e.target.classList.contains("edit-btn")) {
-    // EDIT MODE
-    const response = await fetch(API_URL);
-    const items = await response.json();
-    const item = items.find((i) => i.id == id);
+  // ✏️ EDIT
+  if (e.target.classList.contains("edit")) {
+    const res = await fetch(API_URL);
+    const items = await res.json();
+    const item = items.find(i => i.id == id);
 
     nameInput.value = item.name;
     categoryInput.value = item.category;
     colorInput.value = item.color;
+
     editId = item.id;
+    submitBtn.textContent = "Uppdatera";
   }
 });
 
-// Start
+// Kör vid start
 fetchItems();
