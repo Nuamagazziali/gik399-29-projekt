@@ -16,7 +16,7 @@ async function fetchItems() {
 
   list.innerHTML = "";
 
-  // 🟢 Tomt-läge
+  
   if (items.length === 0) {
     list.innerHTML = `<p style="color:#666;font-style:italic;">
       Inga items ännu – lägg till ett ovan 👆
@@ -57,7 +57,7 @@ form.addEventListener("submit", async (e) => {
   };
 
   if (editId) {
-    // ✏️ UPDATE
+    //  UPDATE
     await fetch(`${API_URL}/${editId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -92,7 +92,7 @@ list.addEventListener("click", async (e) => {
     fetchItems();
   }
 
-  // ✏️ EDIT
+  //  EDIT
   if (e.target.classList.contains("edit")) {
     const res = await fetch(API_URL);
     const items = await res.json();
