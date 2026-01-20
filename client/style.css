@@ -1,1 +1,100 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f4f6f8;
+  padding: 40px;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+/* FORM */
+#item-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#item-form input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#item-form button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #1a73e8;
+  color: white;
+  cursor: pointer;
+}
+
+/* GRID */
+#item-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+/* ITEM CARD */
+.item-card {
+  display: flex;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.12);
+}
+
+/* COLOR STRIP */
+.color-bar {
+  width: 14px;
+}
+
+/* CONTENT */
+.item-content {
+  padding: 20px;
+  flex: 1;
+}
+
+.item-content h3 {
+  margin: 0 0 6px 0;
+}
+
+.category {
+  margin: 0;
+  color: #555;
+}
+
+/* BUTTONS */
+.buttons {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn {
+  background: #fbbc04;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: #ea4335;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 
